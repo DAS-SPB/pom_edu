@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pom-edu"
+version = "0.1.0"
+description = ""
+authors = ["DAS <garsiamarkes111@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pytest = "^8.3.4"
+selenium = "^4.28.1"
+allure-pytest = "^2.13.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
