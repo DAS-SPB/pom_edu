@@ -38,3 +38,13 @@ class BasePage:
                 raise e
 
         return wrapper
+
+    def __getattribute__(self, name):
+        """
+        Overrides access to class attributes.
+        If the attribute is a method, automatically applies the 'screenshot_on_failure' decorator.
+        """
+        attr = super().__getattribute__(name)
+        if callable(attr) and not name.startswith("__") and name != "make_screenshot":
+            return self.screenshot_on_failure(attr)
+        return attr
