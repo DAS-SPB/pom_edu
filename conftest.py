@@ -4,8 +4,6 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 
-import config
-
 
 def create_driver(browser_name, headless):
     """Create driver based on browser name"""
