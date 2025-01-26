@@ -31,7 +31,7 @@ def create_driver(browser_name, headless):
         return webdriver.Edge(options=options)
 
     else:
-        raise ValueError(f"Unsupported browser: {browser_name}. Options: chrome, firefox, edge")
+        raise ValueError(f"Unsupported browser: {browser_name}. Options: chrome, firefox, edge.")
 
 
 def pytest_add_option(parser):
@@ -40,12 +40,18 @@ def pytest_add_option(parser):
         "--browser",
         action="store",
         default="chrome",
-        help="Browser to run tests on. Options: chrome, firefox, edge",
+        help="Browser to run tests on. Options: chrome, firefox, edge.",
     )
     parser.addoption(
         "--headless",
         action="store_true",  # This makes the option a flag (boolean)
         help="Run tests in headless mode. By default, it is False (headed mode).",
+    )
+    parser.addoption(
+        "--env",
+        action="store",
+        default="https://www.saucedemo.com/",
+        help="Env host to run tests on.",
     )
 
 
@@ -58,3 +64,9 @@ def driver(request):
     request.cls.driver = driver
     yield driver
     driver.quit()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def host(request):
+    """Fixture for determining env host"""
+    return request.config.getoption("--env")
