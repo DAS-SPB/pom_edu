@@ -4,6 +4,8 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 
+import config
+
 
 def create_driver(browser_name, headless):
     """Create driver based on browser name"""
@@ -34,7 +36,7 @@ def create_driver(browser_name, headless):
         raise ValueError(f"Unsupported browser: {browser_name}. Options: chrome, firefox, edge.")
 
 
-def pytest_add_option(parser):
+def pytest_addoption(parser):
     """Adding a command line parameter to select a browser"""
     parser.addoption(
         "--browser",
@@ -67,6 +69,6 @@ def driver(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def host(request):
+def get_host(request):
     """Fixture for determining env host"""
     return request.config.getoption("--env")
