@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 class LoginPage(BasePage):
     def __init__(self, driver, host):
         super().__init__(driver)
-        self.PAGE_URL = f"{host}"
+        self.PAGE_URL = f"{host}/"
         self.PAGE_TITLE = "Swag Labs"
         self.USERNAME_INPUT = ("id", "user-name")
         self.PASSWORD_INPUT = ("id", "password")
