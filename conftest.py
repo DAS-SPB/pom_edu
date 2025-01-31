@@ -50,7 +50,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--env",
         action="store",
-        default="https://www.saucedemo.com/",
+        default="https://www.saucedemo.com",
         help="Env host to run tests on.",
     )
 
