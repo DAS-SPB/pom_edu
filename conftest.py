@@ -1,4 +1,6 @@
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -70,3 +72,18 @@ def driver(request):
 def host(request):
     """Fixture for determining env host"""
     return request.config.getoption("--env")
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.failed and call.when == "call":
+        driver = item.funcargs.get("driver", None)
+        if driver:
+            allure.attach(
+                body=driver.get_screenshot_as_png(),
+                name="screenshot-on-failure",
+                attachment_type=AttachmentType.PNG
+            )
