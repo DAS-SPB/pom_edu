@@ -67,6 +67,6 @@ def driver(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def get_host(request):
+def host(request):
     """Fixture for determining env host"""
     return request.config.getoption("--env")
