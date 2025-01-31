@@ -3,7 +3,7 @@ from base.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class CheckoutStepTwo(BasePage):
+class CheckoutStepTwoPage(BasePage):
     def __init__(self, driver, host):
         super().__init__(driver)
         self.PAGE_URL = f"{host}/checkout-step-two.html"
