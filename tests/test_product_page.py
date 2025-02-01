@@ -31,7 +31,6 @@ class TestProductPage(BaseTest):
 
     @allure.severity("Normal")
     @allure.title("Check info for another item on product page")
-    @pytest.mark.smoke
     def test_check_info_for_another_item(self):
         self.logged_in()
         items = self.products_page.get_all_items()

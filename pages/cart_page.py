@@ -41,7 +41,7 @@ class SeparateItem:
         self.ITEM_QUANTITY = ("xpath", ".//div[@class='cart_quantity']")
         self.ITEM_TITLE = ("xpath", ".//div[contains(@class, 'inventory_item_name')]")
         self.ITEM_DESCRIPTION = ("xpath", ".//div[contains(@class, 'inventory_item_desc')]")
-        self.ITEM_PRICE = ("class", "inventory_item_price")
+        self.ITEM_PRICE = ("xpath", ".//div[@class='inventory_item_price']")
         self.REMOVE_FROM_CART_BUTTON = ("xpath", ".//button[contains(@id, 'remove')]")
 
     def check_item_quantity(self, expected_item_quantity):
@@ -53,7 +53,7 @@ class SeparateItem:
 
     def check_item_title(self, expected_item_title):
         with allure.step(f"Check item's title to be: {expected_item_title}"):
-            actual_title = self.item.find_element(*self.ITEM_QUANTITY).text
+            actual_title = self.item.find_element(*self.ITEM_TITLE).text
             assert actual_title == expected_item_title, (
                 f"Expected item's title to be: '{expected_item_title}', actual: '{actual_title}'"
             )
