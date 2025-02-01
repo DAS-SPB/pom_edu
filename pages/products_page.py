@@ -14,7 +14,7 @@ class ProductsPage(BasePage):
     @allure.step("Get all items on product page")
     def get_all_items(self):
         items = self.wait.until(EC.visibility_of_all_elements_located(self.ITEMS_LIST))
-        return [SeparateProduct(item, self.wait) for item in items]
+        return [SeparateItem(item, self.wait) for item in items]
 
     def get_num_of_items_in_cart(self, expected_num_of_items_in_cart):
         with allure.step(f"Check num of items in cart to be: {expected_num_of_items_in_cart}"):
@@ -24,7 +24,7 @@ class ProductsPage(BasePage):
                 self.wait.until(EC.invisibility_of_element_located(self.CART_BADGE))
 
 
-class SeparateProduct:
+class SeparateItem:
     def __init__(self, item, wait):
         self.item = item
         self.wait = wait
