@@ -2,9 +2,9 @@ import pytest
 from pages.login_page import LoginPage
 from pages.products_page import ProductsPage
 from pages.cart_page import CartPage
-from pages.checkout_step_one import CheckoutStepOnePage
-from pages.checkout_step_two import CheckoutStepTwoPage
-from pages.checkout_complete import CheckoutCompletePage
+from pages.checkout_step_one_page import CheckoutStepOnePage
+from pages.checkout_step_two_page import CheckoutStepTwoPage
+from pages.checkout_complete_page import CheckoutCompletePage
 
 
 class BaseTest:
