@@ -3,33 +3,29 @@ import allure
 from base.base_test import BaseTest
 
 
-@allure.feature("Cart page functionality")
+@allure.feature("Cart Page functionality")
 @pytest.mark.cartpage
 @pytest.mark.regression
 class TestCartPage(BaseTest):
-    def logged_in(self):
+    def open_cart_page_with_items(self):
         self.login_page.open()
         self.login_page.is_opened()
         self.login_page.enter_username(username="standard_user")
         self.login_page.enter_password(password="secret_sauce")
         self.login_page.click_submit_button()
-        self.products_page.is_opened()
 
-    def add_items_to_cart(self):
+        self.products_page.is_opened()
         items = self.products_page.get_all_items()
         items[0].click_add_to_cart()
         items[1].click_add_to_cart()
 
-    def open_cart_page(self):
         self.cart_page.open()
         self.cart_page.is_opened()
 
     @allure.severity("Critical")
     @allure.title("Check num of items in the cart")
     def test_check_num_of_items_in_cart(self):
-        self.logged_in()
-        self.add_items_to_cart()
-        self.open_cart_page()
+        self.open_cart_page_with_items()
 
         items = self.cart_page.get_all_items()
         items_num = len(items)
@@ -39,9 +35,7 @@ class TestCartPage(BaseTest):
     @allure.severity("Critical")
     @allure.title("Click 'Checkout' button")
     def test_check_checkout_button_in_cart(self):
-        self.logged_in()
-        self.add_items_to_cart()
-        self.open_cart_page()
+        self.open_cart_page_with_items()
 
         self.cart_page.click_checkout_button()
         self.checkout_step_one.is_opened()
@@ -49,9 +43,7 @@ class TestCartPage(BaseTest):
     @allure.severity("Normal")
     @allure.title("Click 'Continue shopping' button")
     def test_check_checkout_button_in_cart(self):
-        self.logged_in()
-        self.add_items_to_cart()
-        self.open_cart_page()
+        self.open_cart_page_with_items()
 
         self.cart_page.click_continue_shopping_button()
         self.products_page.is_opened()
@@ -59,9 +51,7 @@ class TestCartPage(BaseTest):
     @allure.severity("Normal")
     @allure.title("Check first item in the cart")
     def test_check_first_item_in_cart(self):
-        self.logged_in()
-        self.add_items_to_cart()
-        self.open_cart_page()
+        self.open_cart_page_with_items()
 
         items = self.cart_page.get_all_items()
         for item in items:
@@ -75,9 +65,7 @@ class TestCartPage(BaseTest):
     @allure.severity("Normal")
     @allure.title("Remove second item from the cart")
     def test_remove_second_item_from_cart(self):
-        self.logged_in()
-        self.add_items_to_cart()
-        self.open_cart_page()
+        self.open_cart_page_with_items()
 
         items = self.cart_page.get_all_items()
         item = items[1]
