@@ -40,7 +40,7 @@ class SeparateItem:
         with allure.step(f"Check item's image name to be: {expected_item_image_name}"):
             actual_image_name = self.item.find_element(*self.ITEM_IMAGE).get_attribute('alt')
             assert actual_image_name == expected_item_image_name, (
-                f"Expected: '{expected_item_image_name}', actual: '{actual_image_name}'"
+                f"Expected image name to be: '{expected_item_image_name}', actual: '{actual_image_name}'"
             )
 
     def check_item_title(self, expected_item_title):
