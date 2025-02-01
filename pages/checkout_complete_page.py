@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 class CheckoutCompletePage(BasePage):
     def __init__(self, driver, host):
         super().__init__(driver)
-        self.PAGE_URL = f"{host}"
+        self.PAGE_URL = f"{host}/checkout-complete.html"
         self.PAGE_TITLE = "Swag Labs"
         self.CHECKOUT_NOTIFICATION = ("xpath", "//div[contains(@id, 'checkout')]/h2[contains(@class, 'header')]")
         self.CHECKOUT_DESCRIPTION = ("xpath", "//div[contains(@id, 'checkout')]/div[contains(@class, 'text')]")
