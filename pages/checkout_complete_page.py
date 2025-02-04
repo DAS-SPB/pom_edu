@@ -1,6 +1,5 @@
 import allure
 from base.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class CheckoutCompletePage(BasePage):
@@ -14,19 +13,18 @@ class CheckoutCompletePage(BasePage):
 
     @allure.step("Click 'Back Home' button")
     def click_back_home_button(self):
-        self.wait.until(EC.element_to_be_clickable(self.BACK_HOME)).click()
+        self.wait_until_clickable(self.BACK_HOME).click()
 
     def check_checkout_notification(self, expected_checkout_notification):
         with allure.step(f"Check checkout notification to be: {expected_checkout_notification}"):
-            actual_notification = self.wait.until(
-                EC.visibility_of_element_located(self.CHECKOUT_NOTIFICATION)).text
+            actual_notification = self.wait_until_visible(self.CHECKOUT_NOTIFICATION).text
             assert actual_notification == expected_checkout_notification, (
                 f"Expected notification text to be: {expected_checkout_notification}, actual: {actual_notification}"
             )
 
     def check_checkout_description(self, expected_checkout_description):
         with allure.step(f"Check checkout notification to be: {expected_checkout_description}"):
-            actual_description = self.wait.until(EC.visibility_of_element_located(self.CHECKOUT_DESCRIPTION)).text
+            actual_description = self.wait_until_visible(self.CHECKOUT_DESCRIPTION).text
             assert actual_description == expected_checkout_description, (
                 f"Expected description text to be: {expected_checkout_description}, actual: {actual_description}"
             )

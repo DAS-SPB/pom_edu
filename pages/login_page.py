@@ -1,6 +1,5 @@
 import allure
 from base.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class LoginPage(BasePage):
@@ -16,17 +15,17 @@ class LoginPage(BasePage):
 
     def enter_username(self, username):
         with allure.step(f"Enter login: {username}"):
-            self.wait.until(EC.element_to_be_clickable(self.USERNAME_INPUT)).send_keys(username)
+            self.wait_until_clickable(self.USERNAME_INPUT).send_keys(username)
 
     def enter_password(self, password):
         with allure.step(f"Enter login: {password}"):
-            self.wait.until(EC.element_to_be_clickable(self.PASSWORD_INPUT)).send_keys(password)
+            self.wait_until_clickable(self.PASSWORD_INPUT).send_keys(password)
 
     @allure.step("Click 'Login' button")
     def click_submit_button(self):
-        self.wait.until(EC.element_to_be_clickable(self.LOGIN_BUTTON)).click()
+        self.wait_until_clickable(self.LOGIN_BUTTON).click()
 
     def check_validation_error(self, validation_error):
         with allure.step(f"Check validation error message: {validation_error}"):
-            self.wait.until(EC.visibility_of_element_located(self.VALIDATION_ERROR_CONTAINER))
-            self.wait.until(EC.text_to_be_present_in_element(self.VALIDATION_ERROR_TEXT, validation_error))
+            self.wait_until_visible(self.VALIDATION_ERROR_CONTAINER)
+            self.wait_until_text_to_be_present(self.VALIDATION_ERROR_TEXT, validation_error)

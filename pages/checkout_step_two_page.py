@@ -1,6 +1,5 @@
 import allure
 from base.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class CheckoutStepTwoPage(BasePage):
@@ -19,51 +18,51 @@ class CheckoutStepTwoPage(BasePage):
 
     @allure.step("Get all items in cart on checkout page two")
     def get_all_items(self):
-        items = self.wait.until(EC.visibility_of_all_elements_located(self.ITEMS_LIST))
+        items = self.wait_until_all_elements_visible(self.ITEMS_LIST)
         return [SeparateItem(item, self.wait) for item in items]
 
     def check_payment_information(self, expected_payment_information):
         with allure.step(f"Check 'Payment information' to be: {expected_payment_information}"):
-            actual_payment_info = self.wait.until(EC.visibility_of_element_located(self.PAYMENT_INFORMATION)).text
+            actual_payment_info = self.wait_until_visible(self.PAYMENT_INFORMATION).text
             assert actual_payment_info == expected_payment_information, (
                 f"Expected payment information to be: {expected_payment_information}, actual: {actual_payment_info}"
             )
 
     def check_shipping_information(self, expected_shipping_information):
         with allure.step(f"Check 'Shipping information' to be: {expected_shipping_information}"):
-            actual_shipping_info = self.wait.until(EC.visibility_of_element_located(self.SHIPPING_INFORMATION)).text
+            actual_shipping_info = self.wait_until_visible(self.SHIPPING_INFORMATION).text
             assert actual_shipping_info == expected_shipping_information, (
                 f"Expected shipping information to be: {expected_shipping_information}, actual: {actual_shipping_info}"
             )
 
     def check_price_subtotal(self, expected_price_subtotal):
         with allure.step(f"Check subtotal price to be: {expected_price_subtotal}"):
-            actual_subtotal_price = self.wait.until(EC.visibility_of_element_located(self.PRICE_SUBTOTAL)).text
+            actual_subtotal_price = self.wait_until_visible(self.PRICE_SUBTOTAL).text
             assert actual_subtotal_price == expected_price_subtotal, (
                 f"Expected subtotal price to be: {expected_price_subtotal}, actual: {actual_subtotal_price}"
             )
 
     def check_price_tax(self, expected_price_tax):
         with allure.step(f"Check tax price to be: {expected_price_tax}"):
-            actual_tax_price = self.wait.until(EC.visibility_of_element_located(self.PRICE_TAX)).text
+            actual_tax_price = self.wait_until_visible(self.PRICE_TAX).text
             assert actual_tax_price == expected_price_tax, (
                 f"Expected tax price to be: {expected_price_tax}, actual: {actual_tax_price}"
             )
 
     def check_price_total(self, expected_price_total):
         with allure.step(f"Check total price to be: {expected_price_total}"):
-            actual_total_price = self.wait.until(EC.visibility_of_element_located(self.PRICE_TOTAL)).text
+            actual_total_price = self.wait_until_visible(self.PRICE_TOTAL).text
             assert actual_total_price == expected_price_total, (
                 f"Expected total price to be: {expected_price_total}, actual: {actual_total_price}"
             )
 
     @allure.step("Click 'Finish' button")
     def click_finish_button(self):
-        self.wait.until(EC.element_to_be_clickable(self.FINISH_BUTTON)).click()
+        self.wait_until_clickable(self.FINISH_BUTTON).click()
 
     @allure.step("Click 'Cancel' button")
     def click_cancel_button(self):
-        self.wait.until(EC.element_to_be_clickable(self.CANCEL_BUTTON)).click()
+        self.wait_until_clickable(self.CANCEL_BUTTON).click()
 
 
 class SeparateItem:

@@ -20,3 +20,18 @@ class BasePage:
         with allure.step(f"Page {self.PAGE_NAME} is opened"):
             self.wait.until(EC.url_to_be(self.PAGE_URL))
             self.wait.until(EC.title_is(self.PAGE_TITLE))
+
+    def wait_until_clickable(self, locator):
+        return self.wait.until(EC.element_to_be_clickable(locator))
+
+    def wait_until_visible(self, locator):
+        return self.wait.until(EC.visibility_of_element_located(locator))
+
+    def wait_until_all_elements_visible(self, locator):
+        return self.wait.until(EC.visibility_of_all_elements_located(locator))
+
+    def wait_until_invisible(self, locator):
+        return self.wait.until(EC.invisibility_of_element_located(locator))
+
+    def wait_until_text_to_be_present(self, locator, text):
+        return self.wait.until(EC.text_to_be_present_in_element(locator, text))

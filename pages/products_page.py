@@ -1,6 +1,5 @@
 import allure
 from base.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class ProductsPage(BasePage):
@@ -13,15 +12,15 @@ class ProductsPage(BasePage):
 
     @allure.step("Get all items on product page")
     def get_all_items(self):
-        items = self.wait.until(EC.visibility_of_all_elements_located(self.ITEMS_LIST))
+        items = self.wait_until_all_elements_visible(self.ITEMS_LIST)
         return [SeparateItem(item, self.wait) for item in items]
 
     def get_num_of_items_in_cart(self, expected_num_of_items_in_cart):
         with allure.step(f"Check num of items in cart to be: {expected_num_of_items_in_cart}"):
             if int(expected_num_of_items_in_cart) > 0:
-                self.wait.until(EC.text_to_be_present_in_element(self.CART_BADGE, expected_num_of_items_in_cart))
+                self.wait_until_text_to_be_present(self.CART_BADGE, expected_num_of_items_in_cart)
             else:
-                self.wait.until(EC.invisibility_of_element_located(self.CART_BADGE))
+                self.wait_until_invisible(self.CART_BADGE)
 
 
 class SeparateItem:
