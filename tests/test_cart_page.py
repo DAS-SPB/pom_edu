@@ -6,6 +6,7 @@ from base.base_test import BaseTest
 @allure.feature("Cart Page functionality")
 @pytest.mark.cartpage
 @pytest.mark.regression
+@pytest.mark.xdist_group("cartpage")
 class TestCartPage(BaseTest):
 
     @allure.severity("Critical")

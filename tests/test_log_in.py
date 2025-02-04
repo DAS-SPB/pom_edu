@@ -6,6 +6,7 @@ from base.base_test import BaseTest
 @allure.feature("Login Page functionality")
 @pytest.mark.login
 @pytest.mark.regression
+@pytest.mark.xdist_group("login")
 class TestLogin(BaseTest):
 
     @allure.severity("Critical")

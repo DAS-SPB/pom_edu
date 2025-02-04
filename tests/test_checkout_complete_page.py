@@ -6,6 +6,7 @@ from base.base_test import BaseTest
 @allure.feature("Checkout Complete Page functionality")
 @pytest.mark.checkoutcompletepage
 @pytest.mark.regression
+@pytest.mark.xdist_group("checkoutcompletepage")
 class TestCheckoutCompletePage(BaseTest):
 
     @allure.severity("Critical")
