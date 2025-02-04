@@ -3,17 +3,10 @@ import allure
 from base.base_test import BaseTest
 
 
-@allure.feature("Product page functionality")
+@allure.feature("Product Page functionality")
 @pytest.mark.productpage
 @pytest.mark.regression
 class TestProductPage(BaseTest):
-    def logged_in(self):
-        self.login_page.open()
-        self.login_page.is_opened()
-        self.login_page.enter_username(username="standard_user")
-        self.login_page.enter_password(password="secret_sauce")
-        self.login_page.click_submit_button()
-        self.products_page.is_opened()
 
     @allure.severity("Critical")
     @allure.title("Check info for the first item on product page")

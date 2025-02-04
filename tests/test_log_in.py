@@ -3,20 +3,10 @@ import allure
 from base.base_test import BaseTest
 
 
-@allure.feature("Log in functionality")
+@allure.feature("Login Page functionality")
 @pytest.mark.login
 @pytest.mark.regression
 class TestLogin(BaseTest):
-
-    def login(self, username: str = None, password: str = None):
-        self.login_page.open()
-        self.login_page.is_opened()
-
-        if username:
-            self.login_page.enter_username(username=username)
-        if password:
-            self.login_page.enter_password(password=password)
-        self.login_page.click_submit_button()
 
     @allure.severity("Critical")
     @allure.title("Log in successfully")

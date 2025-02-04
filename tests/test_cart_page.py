@@ -7,20 +7,6 @@ from base.base_test import BaseTest
 @pytest.mark.cartpage
 @pytest.mark.regression
 class TestCartPage(BaseTest):
-    def open_cart_page_with_items(self):
-        self.login_page.open()
-        self.login_page.is_opened()
-        self.login_page.enter_username(username="standard_user")
-        self.login_page.enter_password(password="secret_sauce")
-        self.login_page.click_submit_button()
-
-        self.products_page.is_opened()
-        items = self.products_page.get_all_items()
-        items[0].click_add_to_cart()
-        items[1].click_add_to_cart()
-
-        self.cart_page.open()
-        self.cart_page.is_opened()
 
     @allure.severity("Critical")
     @allure.title("Check num of items in the cart")
