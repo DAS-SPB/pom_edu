@@ -15,19 +15,19 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Docker images
-        run: docker-compose build
+        run: docker compose build
 
       - name: Start Selenium Grid
-        run: docker-compose up -d hub chrome firefox edge
+        run: docker compose up -d hub chrome firefox edge
 
       - name: Run tests on all browsers
-        run: docker-compose up --abort-on-container-exit tests_chrome tests_firefox tests_edge
+        run: docker compose up --abort-on-container-exit tests_chrome tests_firefox tests_edge
 
       - name: Stop all containers
-        run: docker-compose down
+        run: docker compose down
 
       - name: Generate Allure report inside container
-        run: docker-compose run --rm tests \
+        run: docker compose run --rm tests \
              poetry run allure generate allure-results -o allure-report --clean
 
       - name: Upload Allure report artifact
