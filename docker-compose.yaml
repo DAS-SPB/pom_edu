@@ -1,0 +1,82 @@
+version: "3.9"
+
+services:
+  hub:
+    image: selenium/hub:4.8.3
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"  # event bus pub
+      - "4443:4443"  # event bus sub
+      - "4444:4444"  # selenium grid
+
+  chrome:
+    image: selenium/node-chrome:4.8.3
+    container_name: chrome-node
+    shm_size: 2gb
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  firefox:
+    image: selenium/node-firefox:4.8.3
+    container_name: firefox-node
+    shm_size: 2gb
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  edge:
+    image: selenium/node-edge:4.8.3
+    container_name: edge-node
+    shm_size: 2gb
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  tests_chrome:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ui-tests-chrome
+    depends_on:
+      - hub
+      - chrome
+    command: >
+      sh -c "poetry run pytest tests -n 8 -v --browser=chrome --headless --env=https://www.saucedemo.com --alluredir=allure-results/chrome"
+    volumes:
+      - ./allure-results:/app/allure-results
+
+  tests_firefox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ui-tests-firefox
+    depends_on:
+      - hub
+      - firefox
+    command: >
+      sh -c "poetry run pytest tests -n 8 -v --browser=firefox --headless --env=https://www.saucedemo.com --alluredir=allure-results/firefox"
+    volumes:
+      - ./allure-results:/app/allure-results
+
+  tests_edge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ui-tests-edge
+    depends_on:
+      - hub
+      - edge
+    command: >
+      sh -c "poetry run pytest tests -n 8 -v --browser=edge --headless --env=https://www.saucedemo.com --alluredir=allure-results/edge"
+    volumes:
+      - ./allure-results:/app/allure-results
