@@ -27,7 +27,7 @@ jobs:
         run: docker compose down
 
       - name: Generate Allure report inside container
-        run: docker compose run --rm allure_report
+        run: docker compose run --rm allure_service
 
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4

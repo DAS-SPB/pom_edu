@@ -81,13 +81,11 @@ services:
     volumes:
       - ./allure-results:/app/allure-results
 
-  allure_report:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: allure-report
-    command: >
-      sh -c "poetry run allure generate allure-results -o allure-report --clean"
+  allure_service:
+    image: frankescobar/allure-docker-service:latest
+    container_name: allure_service
     volumes:
       - ./allure-results:/app/allure-results
       - ./allure-report:/app/allure-report
+    command: >
+      sh -c "allure generate /app/allure-results -o /app/allure-report --clean"
