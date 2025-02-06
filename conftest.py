@@ -7,33 +7,38 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 
 
-def create_driver(browser_name, headless):
-    """Create driver based on browser name"""
+def create_driver(browser_name: str, headless: bool, remote: bool):
+
+    browser_map = {
+        "chrome": (webdriver.Chrome, ChromeOptions),
+        "firefox": (webdriver.Firefox, FirefoxOptions),
+        "edge": (webdriver.Edge, EdgeOptions),
+    }
+
+    if browser_name not in browser_map:
+        raise ValueError(f"Unsupported browser: {browser_name}. Options: chrome, firefox, edge.")
+
+    driver_class, options_class = browser_map.get(browser_name)
+    options = options_class()
+
+    # Common options
+    options.add_argument("--window-size=1920,1080")
+
+    # Specific options for Chrome
     if browser_name == "chrome":
-        options = ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1920,1080")
-        if headless:
-            options.add_argument("--headless")
-        return webdriver.Chrome(options=options)
 
-    elif browser_name == "firefox":
-        options = FirefoxOptions()
-        options.add_argument("--window-size=1920,1080")
-        if headless:
-            options.add_argument("--headless")
-        return webdriver.Firefox(options=options)
+    if headless:
+        options.add_argument("--headless")
 
-    elif browser_name == "edge":
-        options = EdgeOptions()
-        options.add_argument("--window-size=1920,1080")
-        if headless:
-            options.add_argument("--headless")
-        return webdriver.Edge(options=options)
-
+    if remote:
+        return webdriver.Remote(
+            command_executor="http://hub:4444/wd/hub",
+            options=options
+        )
     else:
-        raise ValueError(f"Unsupported browser: {browser_name}. Options: chrome, firefox, edge.")
+        return driver_class(options=options)
 
 
 def pytest_addoption(parser):
@@ -50,6 +55,11 @@ def pytest_addoption(parser):
         help="Run tests in headless mode. By default, it is False (headed mode).",
     )
     parser.addoption(
+        "--remote",
+        action="store_true",  # This makes the option a flag (boolean)
+        help="Run tests in remote mode. By default, it is False (local mode).",
+    )
+    parser.addoption(
         "--env",
         action="store",
         default="https://www.saucedemo.com",
@@ -62,7 +72,8 @@ def driver(request):
     """Fixture for creating a web driver"""
     browser_name = request.config.getoption("--browser")
     headless = request.config.getoption("--headless")
-    driver = create_driver(browser_name, headless)
+    remote = request.config.getoption("--remote")
+    driver = create_driver(browser_name, headless, remote)
     request.cls.driver = driver
     yield driver
     driver.quit()
