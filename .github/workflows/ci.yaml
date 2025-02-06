@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # necessary for deploy to gh-pages
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      - name: Start Selenium Grid
+        run: docker-compose up -d hub chrome firefox edge
+
+      - name: Run tests on all browsers
+        run: docker-compose up --abort-on-container-exit tests_chrome tests_firefox tests_edge
+
+      - name: Stop all containers
+        run: docker-compose down
+
+      - name: Generate Allure report inside container
+        run: docker-compose run --rm tests \
+             poetry run allure generate allure-results -o allure-report --clean
+
+      - name: Upload Allure report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: allure-report
+
+      - name: Update Allure history
+        run: |
+          git clone --branch gh-pages https://github.com/${{ github.repository }} gh-pages || true
+          if [ -d "gh-pages/history" ]; then
+              echo "Restoring Allure history..."
+              mkdir -p allure-report/history
+              cp -R gh-pages/history/* allure-report/history/ || true
+          else
+              echo "No previous history found."
+          fi
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
