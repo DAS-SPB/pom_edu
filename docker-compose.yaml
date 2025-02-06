@@ -80,3 +80,14 @@ services:
       sh -c "poetry run pytest tests -n 8 -v --browser=edge --headless --remote --alluredir=allure-results/edge"
     volumes:
       - ./allure-results:/app/allure-results
+
+  allure_report:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: allure-report
+    command: >
+      sh -c "poetry run allure generate allure-results -o allure-report --clean"
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./allure-report:/app/allure-report
