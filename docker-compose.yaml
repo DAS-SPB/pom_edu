@@ -51,7 +51,7 @@ services:
       - hub
       - chrome
     command: >
-      sh -c "poetry run pytest tests -n 8 -v --browser=chrome --headless --env=https://www.saucedemo.com --alluredir=allure-results/chrome"
+      sh -c "poetry run pytest tests -n 8 -v --browser=chrome --headless --remote --alluredir=allure-results/chrome"
     volumes:
       - ./allure-results:/app/allure-results
 
@@ -64,7 +64,7 @@ services:
       - hub
       - firefox
     command: >
-      sh -c "poetry run pytest tests -n 8 -v --browser=firefox --headless --env=https://www.saucedemo.com --alluredir=allure-results/firefox"
+      sh -c "poetry run pytest tests -n 8 -v --browser=firefox --headless --remote --alluredir=allure-results/firefox"
     volumes:
       - ./allure-results:/app/allure-results
 
@@ -77,6 +77,6 @@ services:
       - hub
       - edge
     command: >
-      sh -c "poetry run pytest tests -n 8 -v --browser=edge --headless --env=https://www.saucedemo.com --alluredir=allure-results/edge"
+      sh -c "poetry run pytest tests -n 8 -v --browser=edge --headless --remote --alluredir=allure-results/edge"
     volumes:
       - ./allure-results:/app/allure-results
