@@ -84,6 +84,7 @@ services:
   allure_service:
     image: frankescobar/allure-docker-service:latest
     container_name: allure_service
+    user: root
     volumes:
       - ./allure-results:/app/allure-results
       - ./allure-report:/app/allure-report
