@@ -92,25 +92,40 @@ services:
       - /bin/sh
       - -c
       - |
-        echo "Listing /app/allure-results:"
-        ls -la /app/allure-results
+        mkdir -p /app/allure-temp && echo "Directory created: /app/allure-temp"
 
-        for d in /app/allure-results/*; do
-          if [ -d "$d" ]; then
-            name=$(basename "$d")
-            echo "Generating Allure report for $name from $d"
-            allure generate "$d" -o "/app/allure-report/$name" --clean
-          fi
-        done
+        echo "Copying test results..."
+        cp -r /app/allure-results/chrome /app/allure-temp/chrome || echo "Chrome results not found"
+        cp -r /app/allure-results/firefox /app/allure-temp/firefox || echo "Firefox results not found"
+        cp -r /app/allure-results/edge /app/allure-temp/edge || echo "Edge results not found"
 
-        echo "<html><head><meta charset=\"UTF-8\"><title>Allure Reports</title></head><body><h1>Allure Reports</h1><ul>" > /app/allure-report/index.html
-        for d in /app/allure-report/*; do
-          if [ -d "$d" ] && [ "$(basename "$d")" != "index.html" ]; then
-            name=$(basename "$d")
-            echo "<li><a href=\"./$name/index.html\">$name Report</a></li>" >> /app/allure-report/index.html
-          fi
-        done
-        echo "</ul></body></html>" >> /app/allure-report/index.html
+        echo "Checking contents of /app/allure-temp..."
+        ls -R /app/allure-temp || echo "Empty folder"
 
-        echo "Generated Allure reports:"
-        ls -R /app/allure-report || echo "No reports found"
+        echo "Generating Allure reports..."
+        allure generate /app/allure-temp/chrome -o /app/allure-report/chrome --clean || echo "Failed to generate Chrome report"
+        allure generate /app/allure-temp/firefox -o /app/allure-report/firefox --clean || echo "Failed to generate Firefox report"
+        allure generate /app/allure-temp/edge -o /app/allure-report/edge --clean || echo "Failed to generate Edge report"
+        
+        echo "Creating index.html with links to reports..."
+        cat > /app/allure-report/index.html <<EOF
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Allure Reports</title>
+        </head>
+        <body>
+            <h1>Allure Reports</h1>
+            <ul>
+                <li><a href="chrome/index.html">Chrome Report</a></li>
+                <li><a href="firefox/index.html">Firefox Report</a></li>
+                <li><a href="edge/index.html">Edge Report</a></li>
+            </ul>
+        </body>
+        </html>
+        EOF
+
+        echo "Checking generated reports..."
+        ls -R /app/allure-report || echo "Report generation failed"

@@ -74,6 +74,10 @@ def driver(request):
     remote = request.config.getoption("--remote")
     driver = create_driver(browser_name, headless, remote)
     request.cls.driver = driver
+
+    with allure.step(f"Running test on {browser_name}"):
+        allure.dynamic.label("browser", browser_name)
+
     yield driver
     driver.quit()
 
@@ -97,18 +101,3 @@ def pytest_runtest_makereport(item, call):
                 name="screenshot-on-failure",
                 attachment_type=AttachmentType.PNG
             )
-
-
-@pytest.fixture(scope="session", autouse=True)
-def environment_properties(request):
-    browser = request.config.getoption("--browser")
-    env = request.config.getoption("--env")
-    with open("allure-results/environment.properties", "w") as f:
-        f.write(f"BROWSER={browser}\n")
-        f.write(f"ENV={env}\n")
-
-
-def pytest_collection_modifyitems(config, items):
-    browser = config.getoption("--browser")
-    for item in items:
-        item.add_marker(pytest.mark.browser(browser))
