@@ -14,16 +14,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      #      temp
-      - name: Install Allure CLI
-        run: |
-          echo "Downloading Allure CLI..."
-          curl -sLo allure.tar.gz https://github.com/allure-framework/allure2/releases/latest/download/allure-commandline.tgz
-          tar -zxvf allure.tar.gz -C /opt/
-          ln -s /opt/allure*/bin/allure /usr/local/bin/allure
-          allure --version
-      #      temp
-
       - name: Build Docker images
         run: docker compose build
 
@@ -36,24 +26,13 @@ jobs:
       - name: Stop all containers
         run: docker compose down
 
-      #      temp
-      - name: Check allure-results content
-        run: ls -R allure-results || echo "allure-results folder is empty"
-      #      temp
-
       - name: Prepare allure-report folder
         run: |
           mkdir -p allure-report
           chmod -R 777 allure-report
 
-      #      - name: Generate Allure report inside container
-      #        run: docker compose run --rm allure_service
-
-      #      temp
-      - name: Generate Allure report on host
-        run: |
-          allure generate allure-results -o allure-report --clean
-      #      temp
+      - name: Generate Allure report inside container
+        run: docker compose run --rm allure_service
 
       - name: Check allure-report content
         run: ls -R allure-report || echo "allure-report folder is empty or not found"
