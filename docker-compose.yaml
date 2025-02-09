@@ -88,5 +88,25 @@ services:
     volumes:
       - ./allure-results:/app/allure-results
       - ./allure-report:/app/allure-report
-    command: >
-      sh -c "allure generate /app/allure-results/chrome /app/allure-results/firefox /app/allure-results/edge -o /app/allure-report --clean"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        # Creating temp directory
+        mkdir -p /app/allure-temp && echo "Directory created: /app/allure-temp"
+
+        # Copy all subdirectories data from allure-results (chrome, firefox, edge) to /app/allure-temp
+        echo "Copy data from /app/allure-results/* to /app/allure-temp..."
+        find /app/allure-results -mindepth 2 -type f -exec cp {} /app/allure-temp \;
+
+        # Check data in temp directory
+        echo "Data in /app/allure-temp:"
+        ls -R /app/allure-temp || echo "Empty folder"
+
+        # Start report generation
+        echo "Generation of Allure report..."
+        allure generate /app/allure-temp -o /app/allure-report --clean
+
+        # Check /app/allure-report data
+        echo "Data in /app/allure-report:"
+        ls -R /app/allure-report || echo "Report generation failed"
