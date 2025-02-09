@@ -89,4 +89,4 @@ services:
       - ./allure-results:/app/allure-results
       - ./allure-report:/app/allure-report
     command: >
-      sh -c "allure generate /app/allure-results -o /app/allure-report --clean"
+      sh -c "allure generate /app/allure-results/chrome /app/allure-results/firefox /app/allure-results/edge -o /app/allure-report --clean"

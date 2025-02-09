@@ -26,11 +26,6 @@ jobs:
       - name: Stop all containers
         run: docker compose down
 
-#      - name: Debug Allure results
-#        run: |
-#          echo "Check if allure-results on host is present..."
-#          ls -R allure-results || echo "No allure-results found."
-
       - name: Prepare allure-report folder
         run: |
           mkdir -p allure-report
