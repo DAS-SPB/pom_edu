@@ -92,21 +92,25 @@ services:
       - /bin/sh
       - -c
       - |
-        # Creating temp directory
-        mkdir -p /app/allure-temp && echo "Directory created: /app/allure-temp"
+        echo "Listing /app/allure-results:"
+        ls -la /app/allure-results
 
-        # Copy all subdirectories data from allure-results (chrome, firefox, edge) to /app/allure-temp
-        echo "Copy data from /app/allure-results/* to /app/allure-temp..."
-        find /app/allure-results -mindepth 2 -type f -exec cp {} /app/allure-temp \;
+        for d in /app/allure-results/*; do
+          if [ -d "$d" ]; then
+            name=$(basename "$d")
+            echo "Generating Allure report for $name from $d"
+            allure generate "$d" -o "/app/allure-report/$name" --clean
+          fi
+        done
 
-        # Check data in temp directory
-        echo "Data in /app/allure-temp:"
-        ls -R /app/allure-temp || echo "Empty folder"
+        echo "<html><head><meta charset=\"UTF-8\"><title>Allure Reports</title></head><body><h1>Allure Reports</h1><ul>" > /app/allure-report/index.html
+        for d in /app/allure-report/*; do
+          if [ -d "$d" ] && [ "$(basename "$d")" != "index.html" ]; then
+            name=$(basename "$d")
+            echo "<li><a href=\"./$name/index.html\">$name Report</a></li>" >> /app/allure-report/index.html
+          fi
+        done
+        echo "</ul></body></html>" >> /app/allure-report/index.html
 
-        # Start report generation
-        echo "Generation of Allure report..."
-        allure generate /app/allure-temp -o /app/allure-report --clean
-
-        # Check /app/allure-report data
-        echo "Data in /app/allure-report:"
-        ls -R /app/allure-report || echo "Report generation failed"
+        echo "Generated Allure reports:"
+        ls -R /app/allure-report || echo "No reports found"

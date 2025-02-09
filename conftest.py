@@ -8,7 +8,6 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 
 
 def create_driver(browser_name: str, headless: bool, remote: bool):
-
     browser_map = {
         "chrome": (webdriver.Chrome, ChromeOptions),
         "firefox": (webdriver.Firefox, FirefoxOptions),
@@ -98,3 +97,18 @@ def pytest_runtest_makereport(item, call):
                 name="screenshot-on-failure",
                 attachment_type=AttachmentType.PNG
             )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def environment_properties(request):
+    browser = request.config.getoption("--browser")
+    env = request.config.getoption("--env")
+    with open("allure-results/environment.properties", "w") as f:
+        f.write(f"BROWSER={browser}\n")
+        f.write(f"ENV={env}\n")
+
+
+def pytest_collection_modifyitems(config, items):
+    browser = config.getoption("--browser")
+    for item in items:
+        item.add_marker(pytest.mark.browser(browser))
