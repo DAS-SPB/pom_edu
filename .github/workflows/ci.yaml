@@ -26,16 +26,8 @@ jobs:
       - name: Stop all containers
         run: docker compose down
 
-#      - name: Prepare allure-report folder
-#        run: |
-#          mkdir -p allure-report
-#          chmod -R 777 allure-report
-
       - name: Generate Allure report inside container
         run: docker compose run --rm allure_service
-
-#      - name: Check allure-report content
-#        run: ls -R allure-report || echo "allure-report folder is empty or not found"
 
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4
