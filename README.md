@@ -4,7 +4,7 @@
 # Test Automation Project
 
 This project demonstrates an automated testing framework for the [saucedemo.com](https://www.saucedemo.com/) demo website. 
-It is designed to be scalable, maintainable, and efficient for end-to-end web testing. 
+It is designed to be scalable, maintainable and efficient for end-to-end web testing. 
 The framework incorporates modern tools and best practices to ensure reliability and ease of execution.
 
 Tests are implemented for the following pages:
@@ -65,9 +65,9 @@ poetry run pytest tests -n 8 --browser=chrome
 ```
 **Configurable Options**
 - Browser Selection (--browser)
-  -chrome
-  -firefox
-  -edge
+  - chrome
+  - firefox
+  - edge
 - Execution Modes
   - Headless Mode – Run tests in the background (add --headless option).
   - Headed Mode – Run tests with a visible browser window (omit --headless).
@@ -75,3 +75,8 @@ poetry run pytest tests -n 8 --browser=chrome
   - Adjust the number of parallel threads by modifying the -n parameter (-n <num_threads>).
 - CI Execution
   - Regression tests can be triggered in the CI pipeline by clicking the "Run workflow" button in GitHub Actions.
+
+## Possible Improvements
+
+To minimize repetitive interactions with web pages, leveraging an API or managing authentication via cookies would be ideal. 
+However, the demo website does not provide such capabilities, limiting the available optimization strategies.
