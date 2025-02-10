@@ -8,7 +8,6 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 
 
 def create_driver(browser_name: str, headless: bool, remote: bool):
-
     browser_map = {
         "chrome": (webdriver.Chrome, ChromeOptions),
         "firefox": (webdriver.Firefox, FirefoxOptions),
@@ -75,6 +74,10 @@ def driver(request):
     remote = request.config.getoption("--remote")
     driver = create_driver(browser_name, headless, remote)
     request.cls.driver = driver
+
+    with allure.step(f"Running test on {browser_name}"):
+        allure.dynamic.label("browser", browser_name)
+
     yield driver
     driver.quit()
 

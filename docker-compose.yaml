@@ -92,21 +92,40 @@ services:
       - /bin/sh
       - -c
       - |
-        # Creating temp directory
         mkdir -p /app/allure-temp && echo "Directory created: /app/allure-temp"
 
-        # Copy all subdirectories data from allure-results (chrome, firefox, edge) to /app/allure-temp
-        echo "Copy data from /app/allure-results/* to /app/allure-temp..."
-        find /app/allure-results -mindepth 2 -type f -exec cp {} /app/allure-temp \;
+        echo "Copying test results..."
+        cp -r /app/allure-results/chrome /app/allure-temp/chrome || echo "Chrome results not found"
+        cp -r /app/allure-results/firefox /app/allure-temp/firefox || echo "Firefox results not found"
+        cp -r /app/allure-results/edge /app/allure-temp/edge || echo "Edge results not found"
 
-        # Check data in temp directory
-        echo "Data in /app/allure-temp:"
+        echo "Checking contents of /app/allure-temp..."
         ls -R /app/allure-temp || echo "Empty folder"
 
-        # Start report generation
-        echo "Generation of Allure report..."
-        allure generate /app/allure-temp -o /app/allure-report --clean
+        echo "Generating Allure reports..."
+        allure generate /app/allure-temp/chrome -o /app/allure-report/chrome --clean || echo "Failed to generate Chrome report"
+        allure generate /app/allure-temp/firefox -o /app/allure-report/firefox --clean || echo "Failed to generate Firefox report"
+        allure generate /app/allure-temp/edge -o /app/allure-report/edge --clean || echo "Failed to generate Edge report"
+        
+        echo "Creating index.html with links to reports..."
+        cat > /app/allure-report/index.html <<EOF
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Allure Reports</title>
+        </head>
+        <body>
+            <h1>Allure Reports</h1>
+            <ul>
+                <li><a href="chrome/index.html">Chrome Report</a></li>
+                <li><a href="firefox/index.html">Firefox Report</a></li>
+                <li><a href="edge/index.html">Edge Report</a></li>
+            </ul>
+        </body>
+        </html>
+        EOF
 
-        # Check /app/allure-report data
-        echo "Data in /app/allure-report:"
+        echo "Checking generated reports..."
         ls -R /app/allure-report || echo "Report generation failed"
